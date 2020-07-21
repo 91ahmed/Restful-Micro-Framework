@@ -14,6 +14,11 @@
 		private static $table;
 
 		/**
+		 *	@var $data,
+		 */
+		private $data;
+
+		/**
 		 *	@var $query, store sql database query
 		 */
 		private $query;
@@ -57,9 +62,7 @@
 		public function truncate ()
 		{
 			$this->query = "TRUNCATE TABLE ".static::$table."";
-
-			$stmt = $this->db->prepare($this->query);
-			$stmt->execute();
+			return $this;
 		}
 
 		public function useIndex ($index) 
@@ -349,6 +352,8 @@
 		 */
 		public function insert (array $data)
 		{
+			$this->data = $data;
+
 			$this->query = 'INSERT INTO '. static::$table . ' (';
 
 			foreach ($data as $column => $value) {
@@ -365,13 +370,7 @@
 			$this->query = trim($this->query, ', ');
 			$this->query .= ')';
 
-			$stmt = $this->db->prepare($this->query);
-
-			foreach ($data as $column => $value) {
-				$stmt->bindValue(':'.$column, $value);
-			}
-
-			$stmt->execute();
+			return $this;
 		}
 
 		/**
@@ -379,8 +378,10 @@
 		 *
 		 *	@param array $data
 		 */
-		public function update (array $data, $condition)
+		public function update (array $data)
 		{	
+			$this->data = $data;
+
 			$this->query = 'UPDATE ' . static::$table . ' SET ';
 			
 			foreach ($data as $column => $value) {
@@ -388,15 +389,8 @@
 			}
 
 			$this->query = trim($this->query, ', ');
-			$this->query .= ' WHERE '.$condition;
-
-			$stmt = $this->db->prepare($this->query);
-
-			foreach ($data as $column => $value) {
-				$stmt->bindValue(':'.$column, $value);
-			}
-
-			$stmt->execute();
+			
+			return $this;
 		}
 
 		/**
@@ -436,6 +430,17 @@
 			return $data;
 		}
 
+		public function save ()
+		{
+			$stmt = $this->db->prepare($this->query);
+
+			foreach ($this->data as $column => $value) {
+				$stmt->bindValue(':'.$column, $value);
+			}
+
+			$stmt->execute();			
+		}
+
 		public static function query (): Model
 		{
 			if (null === static::$instance) {
@@ -473,7 +478,7 @@
 
 	/* TRUNCATE
 	===========
-	User::query()->truncate();
+	User::query()->truncate()->save();
 	*/
 
 	/* INSERT
@@ -481,7 +486,7 @@
 	User::query()->insert([
 		'id' => 1,
 		'username' => 'ahmed',
-	]);
+	])->save();
 	*/
 
 	/* UPDATE
@@ -489,7 +494,7 @@
 	User::query()->update([
 		'username' => 'sayed',
 		'email' => 'sayed@gmail.com',
-	], 'id = 2');
+	])->where('id', '=', 5)->save();
 	*/
 
 	/* DELETE
@@ -502,5 +507,4 @@
 	$users = User::query()->custom('TRUNCATE TABLE users');
 	$users = User::query()->custom('SELECT * FROM users');
 	*/
-
 ?>

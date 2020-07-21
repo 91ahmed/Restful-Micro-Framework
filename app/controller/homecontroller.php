@@ -12,10 +12,11 @@
 	class HomeController
 	{
 		public function index () 
-		{
+		{	
+
 			// Get data from database
 			//$users = User::query()->all()->get();
-
+			
 			$data = [
 				[
 					'id' => 1,
