@@ -1,6 +1,6 @@
 <?php
 	
-	namespace System\Response;
+	namespace System\Http;
 
 	class Response
 	{

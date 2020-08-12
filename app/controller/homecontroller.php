@@ -4,8 +4,8 @@
 
 	use GuzzleHttp\Client;
 	use Firebase\JWT\JWT;
-	use System\Response\Response;
-	use System\Request\Request;
+	use System\Http\Response;
+	use System\Http\Request;
 
 	use App\Model\User;
 

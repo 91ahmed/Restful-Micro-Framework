@@ -1,6 +1,6 @@
 <?php
 	
-	namespace System\Router;
+	namespace System\Route;
 
 	use App\Middlewares;
 
