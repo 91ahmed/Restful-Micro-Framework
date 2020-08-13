@@ -15,8 +15,9 @@
 		{	
 
 			// Get data from database
-			//$users = User::query()->all()->get();
+			$data = User::query()->all()->get();
 			
+			/*
 			$data = [
 				[
 					'id' => 1,
@@ -29,6 +30,7 @@
 					'email' => 'muhammed@gmail.com',	
 				]
 			];
+			*/
 
 			// Return Response
 			$res = new Response();

@@ -18,40 +18,18 @@
 		 *		sqlite 
 		 *	]
 		 */
-		private $driver = 'mysql';
+		private $driver = DB_DRIVER;
 
 		/**
-		 *	@var $mysql, mysql configuration
+		 *	@var $config, database configuration
 		 */
-		private $mysql = [
-			'host'     => '127.0.0.1',
-			'database' => 'restapi',
-			'user' 	   => 'root',
-			'password' => '',
-			'port' 	   => 3306,
-			'charset'  => 'utf8',
-		];
-
-		/**
-		 *	@var $pgsql, postgresql configuration
-		 */
-		private $pgsql = [
-			'host'     => '127.0.0.1',
-			'database' => 'restapi',
-			'user' 	   => 'postgres',
-			'password' => '24882533',
-			'port' 	   => 5432,
-		];
-
-		/**
-		 *	@var $sqlsrv, sql server configuration
-		 */
-		private $sqlsrv = [
-			'host'     => 'AHMED\ahmed',
-			'database' => 'app',
-			'user' 	   => '.',
-			'password' => '',
-			'port' 	   => 1433,
+		private $config = [
+			'host'     => DB_HOST,
+			'database' => DB_NAME,
+			'user' 	   => DB_USER,
+			'password' => DB_PASSWORD,
+			'port' 	   => DB_PORT,
+			'charset'  => DB_CHARSET,
 		];
 
 		/**
@@ -77,11 +55,8 @@
 		 *	@throws PDOException
 		 *	@throws Exception
 		 */
-		public function PDO ($driver = null) 
+		public function PDO () 
 		{
-			if ($driver !== null) {
-				$this->driver = strtolower($driver);
-			}
 
 			try {
 
@@ -96,9 +71,12 @@
 				}
 
 			} catch(\PDOException $e) {
-
+				
 				exit($e->getMessage());
 			}
+
+			// Set PDO attributes
+			$this->setAttributes();
 
 			return $this->connect;
 		}
@@ -120,9 +98,7 @@
 		 */
 		private function connectMySQl ()
 		{
-			$this->connect = new \PDO("mysql:host={$this->mysql['host']};port={$this->mysql['port']};dbname={$this->mysql['database']};charset={$this->mysql['charset']}", $this->mysql['user'], $this->mysql['password'], $this->options);
-
-			$this->setAttributes();
+			$this->connect = new \PDO("mysql:host={$this->config['host']};port={$this->config['port']};dbname={$this->config['database']};charset={$this->config['charset']}", $this->config['user'], $this->config['password'], $this->options);
 		}
 
 		/**
@@ -131,9 +107,7 @@
 		 */
 		private function connectPostgreSQl ()
 		{
-			$this->connect = new \PDO("pgsql:host={$this->pgsql['host']};port={$this->pgsql['port']};dbname={$this->pgsql['database']}", $this->pgsql['user'], $this->pgsql['password']);
-
-			$this->setAttributes();
+			$this->connect = new \PDO("pgsql:host={$this->config['host']};port={$this->config['port']};dbname={$this->config['database']}", $this->config['user'], $this->config['password']);
 		}
 
 		/**
@@ -142,9 +116,7 @@
 		 */
 		private function connectSQlServer ()
 		{
-			$this->connect = new \PDO("sqlsrv:Server=".$this->sqlsrv['host'].";Database=".$this->sqlsrv['database']."", $this->sqlsrv['user'], $this->sqlsrv['password']);
-
-			$this->setAttributes();
+			$this->connect = new \PDO("sqlsrv:Server=".$this->config['host'].";Database=".$this->config['database']."", $this->config['user'], $this->config['password']);
 		}
 
 		/**
@@ -154,8 +126,6 @@
 		private function connectSQlite ()
 		{
 			$this->connect = new \PDO("sqlite:".$this->sqlite['path']);
-
-			$this->setAttributes();
 		}
 	}
 
