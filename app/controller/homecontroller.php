@@ -15,9 +15,8 @@
 		{	
 
 			// Get data from database
-			$data = User::query()->all()->get();
+			// $users = User::query()->all()->get();
 			
-			/*
 			$data = [
 				[
 					'id' => 1,
@@ -30,11 +29,10 @@
 					'email' => 'muhammed@gmail.com',	
 				]
 			];
-			*/
 
 			// Return Response
-			$res = new Response();
-			$res->type('json')
+			$res = (new Response())
+				->type('json')
 				->status(200)
 				->header('Content-Type', 'application/json')
 				->send($data);
