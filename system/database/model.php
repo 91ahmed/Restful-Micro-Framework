@@ -2,37 +2,40 @@
 	
 	namespace System\Database;
 
-	use System\Database\Connection;
+	use System\Database\Connect;
 
-	class Model
+	class Model extends Connect
 	{
 		public static $instance;
 
-		/**
-		 *	@var $table, store model table
-		 */
+		/** @var $table, store model table */
 		private static $table;
 
-		/**
-		 *	@var $data,
-		 */
+		/** @var $data */
 		private $data;
 
-		/**
-		 *	@var $query, store sql database query
-		 */
+		/** @var $query, store sql database query */
 		private $query;
 
-		/**
-		 *	@var $db, hold database connection
-		 */
+		/** @var $db, hold database connection */
 		private $db;
 
 		private function __construct ()
 		{
-			// Set database connection
-			$connect = new Connection();
-			$this->db = $connect->PDO();
+			// Set database object
+			$this->db = $this->setConnection();
+		}
+
+		/**
+		 *	Set database connection
+		 *
+		 *	@return object
+		 */
+		public function setConnection () 
+		{
+			$connect = new Connect();
+
+			return $connect->open();
 		}
 
 		/**

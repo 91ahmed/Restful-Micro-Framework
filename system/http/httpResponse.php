@@ -2,7 +2,7 @@
 	
 	namespace System\Http;
 
-	class Response
+	class HttpResponse
 	{
 		private $content;
 		

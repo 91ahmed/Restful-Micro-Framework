@@ -4,18 +4,16 @@
 
 	use GuzzleHttp\Client;
 	use Firebase\JWT\JWT;
-	use System\Http\Response;
-	use System\Http\Request;
-
+	use System\Http\HttpResponse;
+	use System\Http\HttpRequest;
 	use App\Model\User;
 
 	class HomeController
 	{
 		public function index () 
 		{	
-
 			// Get data from database
-			// $users = User::query()->all()->get();
+			$users = User::query()->all()->get();
 			
 			$data = [
 				[
@@ -31,12 +29,25 @@
 			];
 
 			// Return Response
-			$res = (new Response())
+			$res = (new HttpResponse())
 				->type('json')
 				->status(200)
 				->header('Content-Type', 'application/json')
 				->send($data);
 			
+		}
+
+		public function guzzle ()
+		{
+			$client = new Client(['base_uri' => 'http://localhost:8080/Restful-Micro-Framework/']);
+			$response = $client->request('GET');
+
+			//echo $response->getBody();
+			//echo $response->getStatusCode(); // 200
+			//echo $response->getReasonPhrase(); // OK
+			//echo $response->getProtocolVersion(); // 1.1
+
+			//var_dump($response);
 		}
 
 		public function JwtwebToken ()

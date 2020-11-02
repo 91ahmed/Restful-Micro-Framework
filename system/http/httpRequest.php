@@ -2,7 +2,7 @@
 	
 	namespace System\Http;
 
-	class Request 
+	class HttpRequest 
 	{
 		/**
 		 * Determine whether a request is [ GET - POST ] .
